@@ -2,7 +2,7 @@
 
 
 #include "Player/Inv_PlayerController.h"
-
+#include "Widgets/HUD/Inv_HUDWidget.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
@@ -16,11 +16,7 @@ void AInv_PlayerController::BeginPlay()
 	{
 		Subsystem->AddMappingContext(DefaultIMC, 0);
 	}
-}
-
-void AInv_PlayerController::PrimaryInteract()
-{
-	UE_LOG(LogTemp, Log, TEXT("PrimaryInteract"));
+	CreateHUDWidget();
 }
 
 void AInv_PlayerController::SetupInputComponent()
@@ -31,3 +27,21 @@ void AInv_PlayerController::SetupInputComponent()
 
 	EnhancedInputComponent->BindAction(PrimaryInteractAction, ETriggerEvent::Started, this, &AInv_PlayerController::PrimaryInteract);
 }
+
+void AInv_PlayerController::PrimaryInteract()
+{
+	UE_LOG(LogTemp, Log, TEXT("PrimaryInteract"));
+}
+
+void AInv_PlayerController::CreateHUDWidget()
+{
+	if (!IsLocalController()) return;
+
+	HUDWidget = CreateWidget<UInv_HUDWidget>(this, HUDWidgetClass);
+	if (IsValid(HUDWidget))
+	{
+		HUDWidget->AddToViewport();
+	}
+}
+
+
